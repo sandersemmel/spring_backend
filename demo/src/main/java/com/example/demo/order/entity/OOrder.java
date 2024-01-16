@@ -4,6 +4,7 @@ package com.example.demo.order.entity;
 
 import java.util.List;
 
+import com.example.demo.common.BaseEntity;
 import com.example.demo.product.entity.Product;
 
 import jakarta.persistence.CascadeType;
@@ -17,11 +18,7 @@ import jakarta.persistence.Table;
 
 @Entity()
 @Table(name = "OORDER")
-public class OOrder {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class OOrder extends BaseEntity{
 
     @OneToMany(cascade= CascadeType.ALL)
     @JoinColumn(name = "order_id")  // This creates a foreign key column in the Product table
@@ -36,14 +33,6 @@ public class OOrder {
     public OOrder(List<Product> products, double total) {
         this.products = products;
         this.total = total;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public List<Product> getProducts() {
