@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.customer.entity.Customer;
+import com.example.demo.discountAgreement.entity.AgreementType;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.order.entity.OOrder;
 import com.example.demo.product.entity.Product;
@@ -27,6 +29,19 @@ public class Util {
         order.setTotal(calculatedOrderTotal);
 
         return order;
+    }
+    public Customer createTestCustomer_withDiscountAgreement(){
+        Customer customer = new Customer();
+
+        Product product = new Product("Testituote", 5);
+
+        DiscountAgreement discountAgreement = new DiscountAgreement();
+        
+        discountAgreement.setProduct(product);
+        customer.setDiscountAgreement(discountAgreement);
+
+        return customer;
+
     }
 
     public void getTestDiscountAgreement(){
