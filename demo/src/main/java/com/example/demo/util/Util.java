@@ -35,10 +35,12 @@ public class Util {
 
         Product product = new Product("Testituote", 5);
 
+        List<DiscountAgreement> discount_agreements = new ArrayList<DiscountAgreement>();
         DiscountAgreement discountAgreement = new DiscountAgreement();
+        discount_agreements.add(discountAgreement);
         
         discountAgreement.setProduct(product);
-        customer.setDiscountAgreement(discountAgreement);
+        customer.setDiscountAgreement(discount_agreements);
 
         return customer;
 

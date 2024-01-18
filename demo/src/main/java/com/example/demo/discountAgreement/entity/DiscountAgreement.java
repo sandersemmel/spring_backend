@@ -3,7 +3,7 @@ package com.example.demo.discountAgreement.entity;
 import com.example.demo.common.BaseEntity;
 import com.example.demo.product.entity.Product;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -16,13 +16,15 @@ public class DiscountAgreement extends BaseEntity {
         
     }
 
-    @Column(nullable = true)
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Product product;
 
     private int percentageOff;
     private int mustBuyAmount;
+
+
     private int onlyPayForAmount;
+
 
 
     public Product getProduct() {
@@ -53,5 +55,19 @@ public class DiscountAgreement extends BaseEntity {
         this.agreementType = agreementType;
     }
 
+    public int getMustBuyAmount() {
+        return mustBuyAmount;
+    }
+
+    public void setMustBuyAmount(int mustBuyAmount) {
+        this.mustBuyAmount = mustBuyAmount;
+    }
+    public int getOnlyPayForAmount() {
+        return onlyPayForAmount;
+    }
+
+    public void setOnlyPayForAmount(int onlyPayForAmount) {
+        this.onlyPayForAmount = onlyPayForAmount;
+    }
 
 }

@@ -1,31 +1,27 @@
 package com.example.demo.customer.entity;
 
-import java.util.UUID;
-
-import org.hibernate.annotations.Any;
-import org.hibernate.annotations.AnyDiscriminatorValue;
-import org.hibernate.annotations.AnyKeyJavaClass;
+import java.util.List;
 
 import com.example.demo.common.BaseEntity;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity()
 @Table(name = "CUSTOMER")
 public class Customer extends BaseEntity{
     
-    DiscountAgreement discountAgreement;
+    @OneToMany(cascade = CascadeType.ALL)
+    List<DiscountAgreement> discountAgreement;
 
-    public DiscountAgreement getDiscountAgreement() {
+    public List<DiscountAgreement> getDiscountAgreement() {
         return discountAgreement;
     }
 
-    public void setDiscountAgreement(DiscountAgreement discountAgreement) {
+    public void setDiscountAgreement(List<DiscountAgreement> discountAgreement) {
         this.discountAgreement = discountAgreement;
     }
 }
