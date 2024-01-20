@@ -15,8 +15,8 @@ import com.example.demo.product.entity.Product;
 public class Util {
  
     public OOrder getTestOrder(){
-        Product hammasHarja = new Product("HammasHarja",5);
-        Product koiranRuoka = new Product("KoiranRuoka",10);
+        Product hammasHarja = new Product("HammasHarja",5, "150");
+        Product koiranRuoka = new Product("KoiranRuoka",10, "150");
 
         var orderProducts = new ArrayList<Product>();
         orderProducts.add(hammasHarja);
@@ -33,10 +33,13 @@ public class Util {
     public Customer createTestCustomer_withDiscountAgreement(){
         Customer customer = new Customer();
 
-        Product product = new Product("Testituote", 5);
+        Product product = new Product("Testituote", 5,"150");
 
         List<DiscountAgreement> discount_agreements = new ArrayList<DiscountAgreement>();
         DiscountAgreement discountAgreement = new DiscountAgreement();
+        discountAgreement.setAgreementType(AgreementType.PERCENTAGE_OFF_PRODUCT);
+        discountAgreement.setProduct(product);
+        discountAgreement.setPercentageOff(5);
         discount_agreements.add(discountAgreement);
         
         discountAgreement.setProduct(product);

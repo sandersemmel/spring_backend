@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.customer.service.CustomerService;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController()
@@ -27,6 +29,7 @@ public class CustomerRest {
 		customerService.createTestCustomer_withDiscountAgreement();
 		return "/createtestcustomer called";
 	}
+	
 	@GetMapping("/getallcustomers")
 	public List<Customer> getAllCustomers(){
 		return customerService.getAllCustomers();

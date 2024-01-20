@@ -16,7 +16,7 @@ public class ProductService {
 
 
     public void createProduct(){
-        var product = new Product("hammasharja", 5);
+        var product = new Product("hammasharja", 5,"XXXXXX");
 
         productRepository.save(product);
     }
