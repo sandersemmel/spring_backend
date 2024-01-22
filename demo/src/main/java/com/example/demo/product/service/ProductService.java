@@ -15,9 +15,9 @@ public class ProductService {
     ProductRepository productRepository;
 
 
-    public void createProduct(){
-        var product = new Product("hammasharja", 5,"XXXXXX");
-
+    public void createProduct(Product product){
+        
+        // TODO SQL injection?
         productRepository.save(product);
     }
 

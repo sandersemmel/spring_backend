@@ -39,6 +39,13 @@
         <scope>runtime</scope>
     </dependency>
 
+	<!-- SQL INJECTION PREVENTION -->
+	<dependency>
+        <groupId>com.github.rkpunjal.sqlsafe</groupId>
+        <artifactId>sql-injection-safe</artifactId>
+        <version>1.0.2</version>
+    </dependency>
+
 	</dependencies>
 
 	<build>

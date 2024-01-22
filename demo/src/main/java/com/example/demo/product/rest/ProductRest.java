@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.product.entity.Product;
 import com.example.demo.product.service.ProductService;
+import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 
 @CrossOrigin
 @RestController()
@@ -24,10 +27,19 @@ public class ProductRest {
 		return "hello from product";
 	}
 
-	@GetMapping("/createproduct")
-	public String createProduct() {
-		productService.createProduct();
-		return "called";
+	@PostMapping("/createproduct")
+	public String createProduct(@RequestBody Product product) {
+		
+		if( !(SqlSafeUtil.isSqlInjectionSafe(product.getName()) && SqlSafeUtil.isSqlInjectionSafe(product.getName()) )){
+			return "Not created";
+		}
+
+		Product newProduct = new Product();
+		newProduct.setName(product.getName());
+		newProduct.setPrice(product.getPrice());
+	
+		productService.createProduct(product);
+		return "Created";
 	}
 
 	@GetMapping("/getallproducts")
