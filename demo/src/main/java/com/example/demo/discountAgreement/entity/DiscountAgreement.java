@@ -18,11 +18,9 @@ public class DiscountAgreement extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     private Product product;
-
+    private AgreementType agreementType;
     private int percentageOff;
     private int mustBuyAmount;
-
-
     private int onlyPayForAmount;
 
 
@@ -45,7 +43,6 @@ public class DiscountAgreement extends BaseEntity {
         this.percentageOff = percentageOff;
     }
 
-    private AgreementType agreementType;
 
     public AgreementType getAgreementType() {
         return agreementType;
