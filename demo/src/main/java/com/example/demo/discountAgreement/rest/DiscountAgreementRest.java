@@ -1,37 +1,36 @@
-package com.example.demo.product.rest;
+package com.example.demo.customer.rest;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.customer.entity.Customer;
+import com.example.demo.customer.service.CustomerService;
+import com.example.demo.discountAgreement.entity.DiscountAgreement;
+import com.example.demo.dto.DTO_DiscountAgreement;
 import com.example.demo.product.entity.Product;
-import com.example.demo.product.service.ProductService;
 import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 
-@CrossOrigin
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+
 @RestController()
-@RequestMapping("/product")
-public class ProductRest {
+@RequestMapping("/discountagreement")
+public class DiscountAgreementRest {
 
 	@Autowired
-	ProductService productService;
-
-	@GetMapping("/producttest")
-	public String greeting() {
-		return "hello from product";
-	}
-
-	@PostMapping("/createproduct")
-	public String createProduct(@RequestBody Product product) {
+	private CustomerService customerService;
+	
+	@PostMapping("/creatediscount")
+	public String createProduct(@RequestBody DTO_DiscountAgreement dto_discountAgreement) {
 		
-		
-		if( !(SqlSafeUtil.isSqlInjectionSafe(product.getName()) && SqlSafeUtil.isSqlInjectionSafe(product.getName()) )){
+		if( !(SqlSafeUtil.isSqlInjectionSafe(dto_discountAgreement.getAgreementType()) && SqlSafeUtil.isSqlInjectionSafe(product.getName()) )){
 			return "Not created";
 		}
 
@@ -42,11 +41,4 @@ public class ProductRest {
 		productService.createProduct(product);
 		return "Created";
 	}
-
-	@GetMapping("/getallproducts")
-	public List<Product> getallproducts() {
-		var products = productService.getAllProducts();
-		return products;
-	}
-
 }
