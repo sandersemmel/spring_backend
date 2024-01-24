@@ -1,5 +1,6 @@
 package com.example.demo.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +60,9 @@ public class Util {
         return products.stream().mapToDouble(Product::getPrice).sum();
     }
 
-    public static <T> boolean isSafeFromSqlInject(T checkableObject){     
-        
+    public static <T> boolean isSafeFromSqlInject(T checkableObject) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{     
+        // Not tested fully but perhaps works :)
+
         Class<?> clazz = checkableObject.getClass();
 
         // Get all methods of the class
@@ -69,26 +71,24 @@ public class Util {
         // Iterate through methods to find getters
         for (Method method : methods) {
             // Check if the method is a getter by its name and return type
-            if (isGetter(method)) {
+            if (Util.isGetter(method)) {
                 // Invoke the getter method dynamically
 
-                Object result = <String>method.invoke(checkableObject);
-                try
-              
+                Object result = method.invoke(checkableObject);
 
-                SqlSafeUtil.isSqlInjectionSafe(result);
+                String stringvalue =String.valueOf(result);
                 
-                // Print the result
-                System.out.println("Getter: " + method.getName() + ", Value: " + result);
+                SqlSafeUtil.isSqlInjectionSafe(stringvalue);
             }
         }
         
         
         return true;
 
-
-
-
+    }
+    private static boolean isGetter(Method method) {
+        return method.getName().startsWith("get") && method.getParameterCount() == 0
+                && !method.getReturnType().equals(void.class);
     }
 
    
