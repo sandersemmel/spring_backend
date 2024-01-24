@@ -32,9 +32,6 @@ public class DiscountAgreementRest {
 
 	@Autowired
 	private DiscountAgreementService discountService;
-
-	@Autowired
-	private ProductService productService;
 	
 	@PostMapping("/creatediscount")
 	public String createDiscount(@RequestBody DTO_DiscountAgreement dto_discountAgreement) {
@@ -48,22 +45,20 @@ public class DiscountAgreementRest {
 		}
 
 
+		this.discountService.createDiscountAgreement(dto_discountAgreement);
+		
+		return "Created";
+	}
+
+
+	@PostMapping("/creatediscount2")
+	public String createDiscount2() {
+		System.out.println("hit");
+
+
 		Product product = null;
 
-		if(dto_discountAgreement.getAgreementType() == AgreementType.PERCENTAGE_OFF_PRODUCT || dto_discountAgreement.getAgreementType() == AgreementType.BUY_X_ONLY_PAY_Y ){
-			product = productService.getProduct(dto_discountAgreement.getProductId());
-			if(product == null){
-				return "Not created - no product";
-			}
-		}
 
-		// TODO MAPPER?
-		DiscountAgreement discountAgreement = new DiscountAgreement();
-		discountAgreement.setAgreementType(dto_discountAgreement.getAgreementType());
-		discountAgreement.setMustBuyAmount(dto_discountAgreement.getMustBuyAmount());
-		discountAgreement.setOnlyPayForAmount(dto_discountAgreement.getOnlyPayForAmount());
-		discountAgreement.setPercentageOff(dto_discountAgreement.getPercentageOff());
-		discountAgreement.setProduct(product);
 		
 		return "Created";
 	}

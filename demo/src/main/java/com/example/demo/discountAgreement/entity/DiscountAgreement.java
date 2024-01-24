@@ -16,7 +16,7 @@ public class DiscountAgreement extends BaseEntity {
         
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     private Product product;
     private AgreementType agreementType;
     private int percentageOff;
