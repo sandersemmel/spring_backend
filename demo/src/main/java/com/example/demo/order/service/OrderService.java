@@ -19,7 +19,7 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     public void createTestOrder(){
-        orderRepository.save(util.getTestOrder());
+        //orderRepository.save(util.getTestOrder());
     }
 
     public List<OOrder> getAllOrders() {

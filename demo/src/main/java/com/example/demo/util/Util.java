@@ -2,7 +2,6 @@ package com.example.demo.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -17,36 +16,36 @@ import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 @Service
 public class Util {
  
-    public OOrder getTestOrder(){
+    public void getTestOrder(){
         Product hammasHarja = new Product("HammasHarja",5, "150");
         Product koiranRuoka = new Product("KoiranRuoka",10, "150");
 
-        var orderProducts = new ArrayList<Product>();
-        orderProducts.add(hammasHarja);
-        orderProducts.add(koiranRuoka);
+        //var orderProducts = new ArrayList<Product>();
+        //orderProducts.add(hammasHarja);
+        //orderProducts.add(koiranRuoka);
 
-        var calculatedOrderTotal = calculateProductTotal(orderProducts);
+        //var calculatedOrderTotal = calculateProductTotal(orderProducts);
 
-        OOrder order = new OOrder();
-        order.setProducts(orderProducts);
-        order.setTotal(calculatedOrderTotal);
+        //OOrder order = new OOrder();
+        //order.setProducts(orderProducts);
+        //order.setTotal(calculatedOrderTotal);
 
-        return order;
+        //return order;
     }
     public Customer createTestCustomer_withDiscountAgreement(){
         Customer customer = new Customer();
 
         Product product = new Product("Testituote", 5,"150");
 
-        List<DiscountAgreement> discount_agreements = new ArrayList<DiscountAgreement>();
+        //List<DiscountAgreement> discount_agreements = new ArrayList<DiscountAgreement>();
         DiscountAgreement discountAgreement = new DiscountAgreement();
         discountAgreement.setAgreementType(AgreementType.PERCENTAGE_OFF_PRODUCT);
         discountAgreement.setProduct(product);
         discountAgreement.setPercentageOff(5);
-        discount_agreements.add(discountAgreement);
+        //discount_agreements.add(discountAgreement);
         
         discountAgreement.setProduct(product);
-        customer.setDiscountAgreement(discount_agreements);
+        //customer.setDiscountAgreement(discount_agreements);
 
         return customer;
 

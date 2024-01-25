@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 @Table(name = "CUSTOMER")
 public class Customer extends BaseEntity{
     
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany()
     List<DiscountAgreement> discountAgreement;
 
     public List<DiscountAgreement> getDiscountAgreement() {
