@@ -3,7 +3,6 @@ package com.example.demo.discountAgreement.entity;
 import com.example.demo.common.BaseEntity;
 import com.example.demo.product.entity.Product;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;

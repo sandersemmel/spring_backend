@@ -1,5 +1,7 @@
 package com.example.demo.discountAgreement.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +43,9 @@ public class DiscountAgreementService {
 		discountAgreement.setProduct(product);
 
         discountRepository.save(discountAgreement);
+    }
+
+    public List<DiscountAgreement> getAllAgreements() {
+		return this.discountRepository.findAll();
     }
 }

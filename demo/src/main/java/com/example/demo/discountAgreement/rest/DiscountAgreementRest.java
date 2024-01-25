@@ -9,19 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.demo.customer.entity.Customer;
-import com.example.demo.customer.service.CustomerService;
-import com.example.demo.discountAgreement.entity.AgreementType;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.discountAgreement.service.DiscountAgreementService;
 import com.example.demo.dto.DTO_DiscountAgreement;
-import com.example.demo.product.entity.Product;
-import com.example.demo.product.service.ProductService;
 import com.example.demo.util.Util;
-import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -50,16 +42,9 @@ public class DiscountAgreementRest {
 		return "Created";
 	}
 
-
-	@PostMapping("/creatediscount2")
-	public String createDiscount2() {
-		System.out.println("hit");
-
-
-		Product product = null;
-
-
-		
-		return "Created";
+	@GetMapping("/getallagreements")
+	public List<DiscountAgreement> getMethodName() {
+		return discountService.getAllAgreements();
 	}
+	
 }
