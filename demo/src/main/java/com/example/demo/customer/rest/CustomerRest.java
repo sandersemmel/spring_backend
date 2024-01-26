@@ -10,7 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.customer.service.CustomerService;
+import com.example.demo.dto.incoming.DTO_CreateCustomer;
+import com.example.demo.util.Util;
+
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -36,4 +42,21 @@ public class CustomerRest {
 	public List<Customer> getAllCustomers(){
 		return customerService.getAllCustomers();
 	}
+
+	@PostMapping("/createcustomer")
+	public void createCustomer(@RequestBody DTO_CreateCustomer entity) {
+
+		try {
+			if(!Util.isSafeFromSqlInject(entity)){
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("SQL injection testing failed");
+			return;
+		}
+
+		customerService.createCustomer(entity);
+		
+	}
+	
 }

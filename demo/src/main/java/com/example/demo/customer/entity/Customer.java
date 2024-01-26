@@ -17,11 +17,20 @@ public class Customer extends BaseEntity{
     @OneToMany()
     List<DiscountAgreement> discountAgreement;
 
+    String name;
+
     public List<DiscountAgreement> getDiscountAgreement() {
         return discountAgreement;
     }
 
     public void setDiscountAgreement(List<DiscountAgreement> discountAgreement) {
         this.discountAgreement = discountAgreement;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+    public void setName(String _name){
+        this.name = _name;
     }
 }

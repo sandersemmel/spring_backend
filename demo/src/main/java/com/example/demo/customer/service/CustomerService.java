@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.customer.repository.CustomerRepository;
+import com.example.demo.dto.incoming.DTO_CreateCustomer;
 import com.example.demo.util.Util;
 
 @Service()
@@ -24,5 +25,12 @@ public class CustomerService {
     
     public List<Customer> getAllCustomers(){
         return customerRepository.findAll();
+    }
+
+    public void createCustomer(DTO_CreateCustomer entity) {
+        Customer customer = new Customer();
+        customer.setName(entity.getName()); 
+
+        customerRepository.save(customer);
     }
 }
