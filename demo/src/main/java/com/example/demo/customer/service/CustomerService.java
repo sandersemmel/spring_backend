@@ -27,10 +27,11 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public void createCustomer(DTO_CreateCustomer entity) {
+    public Customer createCustomer(DTO_CreateCustomer entity) {
         Customer customer = new Customer();
         customer.setName(entity.getName()); 
 
-        customerRepository.save(customer);
+        return customerRepository.save(customer);
+  
     }
 }
