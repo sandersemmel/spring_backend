@@ -32,6 +32,14 @@ public class CustomerService {
         customer.setName(entity.getName()); 
 
         return customerRepository.save(customer);
-  
+    }
+    public Customer findCustomer(long customerID){
+        try {
+            Customer customer =  customerRepository.findById(customerID).get();    
+            return customer;
+        } catch (Exception e) {
+            return null;
+        }
+        
     }
 }

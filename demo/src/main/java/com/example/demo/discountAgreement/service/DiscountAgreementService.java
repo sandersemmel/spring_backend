@@ -41,6 +41,7 @@ public class DiscountAgreementService {
 		discountAgreement.setOnlyPayForAmount(dto_discountAgreement.getOnlyPayForAmount());
 		discountAgreement.setPercentageOff(dto_discountAgreement.getPercentageOff());
 		discountAgreement.setProduct(product);
+		discountAgreement.set
 
         discountRepository.save(discountAgreement);
     }

@@ -5,8 +5,8 @@ import java.util.List;
 import com.example.demo.common.BaseEntity;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 @Table(name = "CUSTOMER")
 public class Customer extends BaseEntity{
     
-    @OneToMany()
+    @OneToMany(fetch = FetchType.EAGER)
     List<DiscountAgreement> discountAgreement;
 
     String name;

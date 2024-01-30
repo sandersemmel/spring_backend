@@ -46,5 +46,13 @@ public class DiscountAgreementRest {
 	public List<DiscountAgreement> getMethodName() {
 		return discountService.getAllAgreements();
 	}
+
+	@PostMapping("attachdiscounttocustomer")
+	public SomeEnityData postMethodName(@RequestBody SomeEnityData entity) {
+		//TODO: process POST request
+		
+		return entity;
+	}
+	
 	
 }

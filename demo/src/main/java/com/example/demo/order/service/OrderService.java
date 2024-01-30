@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.customer.repository.CustomerRepository;
+import com.example.demo.dto.incoming.DTO_CreateOrder;
 import com.example.demo.order.entity.OOrder;
 import com.example.demo.order.repository.OrderRepository;
 import com.example.demo.util.Util;
@@ -18,12 +20,22 @@ public class OrderService {
     @Autowired()
     private OrderRepository orderRepository;
 
+    @Autowired()
+    private CustomerRepository customerRepository;
+
     public void createTestOrder(){
         //orderRepository.save(util.getTestOrder());
     }
 
     public List<OOrder> getAllOrders() {
         return orderRepository.findAll();
+    }
+    public void createOrder(DTO_CreateOrder createOrder){
+        createOrder.getCustomerID();
+
+        
+        OOrder order = new OOrder();
+        order.set
     }
 
 }

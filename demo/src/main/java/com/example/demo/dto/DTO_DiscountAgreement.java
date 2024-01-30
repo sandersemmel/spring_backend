@@ -10,8 +10,9 @@ public class DTO_DiscountAgreement {
     private Integer mustBuyAmount;
     private Integer onlyPayForAmount;
 
+
     public DTO_DiscountAgreement(Long productId, AgreementType agreementType, Integer percentageOff,
-            Integer mustBuyAmount, Integer onlyPayForAmount) {
+            Integer mustBuyAmount, Integer onlyPayForAmount, Long customerID) {
         this.productId = productId;
         this.agreementType = agreementType;
         this.percentageOff = percentageOff;

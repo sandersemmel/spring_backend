@@ -37,15 +37,12 @@ public class Util {
 
         Product product = new Product("Testituote", 5,"150");
 
-        //List<DiscountAgreement> discount_agreements = new ArrayList<DiscountAgreement>();
         DiscountAgreement discountAgreement = new DiscountAgreement();
         discountAgreement.setAgreementType(AgreementType.PERCENTAGE_OFF_PRODUCT);
         discountAgreement.setProduct(product);
-        discountAgreement.setPercentageOff(5);
-        //discount_agreements.add(discountAgreement);
+        discountAgreement.setPercentageOff(5);        
         
         discountAgreement.setProduct(product);
-        //customer.setDiscountAgreement(discount_agreements);
 
         return customer;
 
@@ -89,6 +86,8 @@ public class Util {
         return method.getName().startsWith("get") && method.getParameterCount() == 0
                 && !method.getReturnType().equals(void.class);
     }
+
+    
 
    
 

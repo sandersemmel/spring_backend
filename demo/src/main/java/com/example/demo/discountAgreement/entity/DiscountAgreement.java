@@ -1,9 +1,12 @@
 package com.example.demo.discountAgreement.entity;
 
 import com.example.demo.common.BaseEntity;
+import com.example.demo.customer.entity.Customer;
 import com.example.demo.product.entity.Product;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -21,7 +24,11 @@ public class DiscountAgreement extends BaseEntity {
     private int percentageOff;
     private int mustBuyAmount;
     private int onlyPayForAmount;
-
+    private long customerID;
+    
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Customer customer;
 
 
     public Product getProduct() {
@@ -64,6 +71,13 @@ public class DiscountAgreement extends BaseEntity {
 
     public void setOnlyPayForAmount(int onlyPayForAmount) {
         this.onlyPayForAmount = onlyPayForAmount;
+    }
+    public long getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(long customerID) {
+        this.customerID = customerID;
     }
 
 }
