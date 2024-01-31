@@ -115,7 +115,7 @@ public class Util {
         return originalPrice * (1 - (discountPercentage / 100.0));
     }
 
-    public static OrderSavings calculateOrderTotalPrice(List<OrderProduct> orderProducts, int percentageOff){
+    public static OrderSavings calculateOrderSavings(List<OrderProduct> orderProducts, int percentageOff){
                 
         double orderTotal = orderProducts.stream()
                                 .mapToDouble(e -> e.getPrice() * e.getQuantity())

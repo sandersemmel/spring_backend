@@ -12,6 +12,9 @@ import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.dto.incoming.DTO_CartProduct;
 import com.example.demo.dto.incoming.DTO_CreateOrder;
 import com.example.demo.dto.outgoing.BaseDTO;
+import com.example.demo.interfaces.Discount.BuyXPayYSavingsProduct;
+import com.example.demo.interfaces.Discount.BuyXPayYsavings;
+import com.example.demo.interfaces.Discount.OrderSavings;
 import com.example.demo.interfaces.Discount.ProductSavings;
 import com.example.demo.interfaces.Order.OrderProduct;
 import com.example.demo.order.entity.OOrder;
@@ -60,6 +63,10 @@ public class OrderService {
 
         // calculate discounts
         List<ProductSavings> productSavingsList = new ArrayList();
+        OrderSavings orderSavings = null;
+        List<BuyXPayYsavings> buyXPayYsavingsList = new ArrayList();
+
+        
         for (DiscountAgreement item : customer.getDiscountAgreement()) {
             if(AgreementType.PERCENTAGE_OFF_PRODUCT.equals(item.getAgreementType())){
                 if(productsIds.contains(item.getProduct().getId())){
@@ -68,8 +75,6 @@ public class OrderService {
             }
 
             if(AgreementType.PERCENTAGE_OFF_WHOLE_ORDER.equals(item.getAgreementType())){
-                
-                
                 try {
                     List<OrderProduct> orderProducts = cartProducts.stream().map(cartProduct->{
                         var db_product = productService.getProduct(cartProduct.getProductID());
@@ -79,15 +84,24 @@ public class OrderService {
                         return new OrderProduct(cartProduct.getQuantity(),db_product.getId(), db_product.getPrice());
                     }).toList();
 
-
-                
-                    Util.calculateOrderTotalPrice(orderProducts,item.getPercentageOff());
-
+                    orderSavings = Util.calculateOrderSavings(orderProducts,item.getPercentageOff());
 
                 } catch (Exception e) {
                     response.setExplanation(e.getMessage());
                 }
+            }
 
+            if(AgreementType.BUY_X_ONLY_PAY_Y.equals(item.getAgreementType())){
+                var productsThatAreEligible = cartProducts.stream().map(e-> {
+                    if(e.getProductID() == item.getProduct().getId() && e.getQuantity() >= item.getMustBuyAmount()){
+                        return true;
+                    }
+                    return false;
+                }).toList();
+    
+                productsThatAreEligible.stream().map(e->e)
+
+            
             }
         }
         
