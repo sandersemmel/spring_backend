@@ -2,7 +2,7 @@ package com.example.demo.dto.incoming;
 
 public class DTO_CartProduct {
    private int quantity;
-   private int productID;
+   private long productID;
    
 public int getQuantity() {
     return quantity;
@@ -10,10 +10,10 @@ public int getQuantity() {
 public void setQuantity(int quantity) {
     this.quantity = quantity;
 }
-public int getProductID() {
+public long getProductID() {
     return productID;
 }
-public void setProductID(int productID) {
+public void setProductID(long productID) {
     this.productID = productID;
 } 
 }

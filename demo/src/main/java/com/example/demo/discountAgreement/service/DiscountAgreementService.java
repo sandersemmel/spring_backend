@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.customer.repository.CustomerRepository;
 import com.example.demo.discountAgreement.entity.AgreementType;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.discountAgreement.repository.DiscountAgreementRepository;
 import com.example.demo.dto.DTO_DiscountAgreement;
+import com.example.demo.dto.incoming.DTO_AttachCustomerToDiscount;
 import com.example.demo.product.entity.Product;
 import com.example.demo.product.repository.ProductRepository;
 
@@ -20,6 +22,9 @@ public class DiscountAgreementService {
 
     @Autowired
     ProductRepository productRepository;
+
+	@Autowired
+	CustomerRepository customerRepository;
 
     public void createDiscountAgreement(DTO_DiscountAgreement dto_discountAgreement){
 
@@ -41,12 +46,24 @@ public class DiscountAgreementService {
 		discountAgreement.setOnlyPayForAmount(dto_discountAgreement.getOnlyPayForAmount());
 		discountAgreement.setPercentageOff(dto_discountAgreement.getPercentageOff());
 		discountAgreement.setProduct(product);
-		discountAgreement.set
+		
 
         discountRepository.save(discountAgreement);
     }
 
     public List<DiscountAgreement> getAllAgreements() {
 		return this.discountRepository.findAll();
+    }
+
+    public boolean attachDiscountToCustomer(DTO_AttachCustomerToDiscount entity) {
+		var discount = discountRepository.findById(entity.getDiscountID()).get();
+		var customer = customerRepository.findById(entity.getCustomerID()).get();
+		if(discount == null || customer == null){
+			return false;
+		}	
+		discount.setCustomerID(customer.getId());
+		var oldDiscountAgreements = customer.getDiscountAgreement();
+		oldDiscountAgreements.add(discount);
+		return true;
     }
 }

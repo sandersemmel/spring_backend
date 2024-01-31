@@ -1,5 +1,6 @@
 package com.example.demo.discountAgreement.rest;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.discountAgreement.service.DiscountAgreementService;
 import com.example.demo.dto.DTO_DiscountAgreement;
+import com.example.demo.dto.incoming.DTO_AttachCustomerToDiscount;
+import com.example.demo.dto.outgoing.BaseDTO;
 import com.example.demo.util.Util;
 
 
@@ -48,10 +51,21 @@ public class DiscountAgreementRest {
 	}
 
 	@PostMapping("attachdiscounttocustomer")
-	public SomeEnityData postMethodName(@RequestBody SomeEnityData entity) {
-		//TODO: process POST request
-		
-		return entity;
+	public BaseDTO<String> attachDiscountToCustomer(@RequestBody DTO_AttachCustomerToDiscount entity) {
+		BaseDTO<String> response = new BaseDTO<String>();
+		try {
+			if(!Util.isSafeFromSqlInject(entity)){
+				response.setExplanation("SQL injection problem");
+				return response;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response;
+		}
+
+
+		discountService.attachDiscountToCustomer(entity);
+		return response;
 	}
 	
 	
