@@ -66,11 +66,16 @@ public class OrderService {
         OrderSavings orderSavings = null;
         List<BuyXPayYsavings> buyXPayYsavingsList = new ArrayList();
 
+
+        double totalProductSavings = 0;
+        double totalOrderSavings = 0;
+        double totalBuyXPayYSavings = 0;
         
         for (DiscountAgreement item : customer.getDiscountAgreement()) {
             if(AgreementType.PERCENTAGE_OFF_PRODUCT.equals(item.getAgreementType())){
                 if(productsIds.contains(item.getProduct().getId())){
                     productSavingsList.add(Util.calculateProductDiscount(item));
+                    totalProductSavings = productSavingsList.stream().mapToDouble(e-> e.getTotalSavings()).sum();
                 }
             }
 
@@ -79,35 +84,57 @@ public class OrderService {
                     List<OrderProduct> orderProducts = cartProducts.stream().map(cartProduct->{
                         var db_product = productService.getProduct(cartProduct.getProductID());
                         if(db_product == null){
-                            throw new Exception("Order has product that does not exist in database.");
+                            System.out.println("No product");
+                            return null;
                         }
                         return new OrderProduct(cartProduct.getQuantity(),db_product.getId(), db_product.getPrice());
                     }).toList();
 
                     orderSavings = Util.calculateOrderSavings(orderProducts,item.getPercentageOff());
+                    totalOrderSavings = orderSavings.getTotalSavings();
 
                 } catch (Exception e) {
                     response.setExplanation(e.getMessage());
                 }
             }
 
+            // Calculate the savings for this specific case
             if(AgreementType.BUY_X_ONLY_PAY_Y.equals(item.getAgreementType())){
-                var productsThatAreEligible = cartProducts.stream().map(e-> {
+                var productsThatAreEligible = cartProducts.stream().filter(e-> {
                     if(e.getProductID() == item.getProduct().getId() && e.getQuantity() >= item.getMustBuyAmount()){
                         return true;
                     }
                     return false;
                 }).toList();
     
-                productsThatAreEligible.stream().map(e->e)
+                List<BuyXPayYsavings> savings = productsThatAreEligible.stream().map(e->{
+                    var db_product = productService.getProduct(e.getProductID());
+                    if(db_product == null){
+                        System.out.println("no such product");
+                        return null;
+                    }
+                                        
+                    BuyXPayYsavings buyXPayYsavings = new BuyXPayYsavings();
+                    var howManyDiscounted = item.getMustBuyAmount() - item.getOnlyPayForAmount();
+                    var totalSavings = db_product.getPrice() * howManyDiscounted;
+                    buyXPayYsavings.setOriginalOrderTotal(e.getQuantity() *  db_product.getPrice());
+                    buyXPayYsavings.setTotalAfterSavings(totalSavings);
+                    buyXPayYsavings.setOriginalOrderTotal(e.getQuantity() * db_product.getPrice());
+                    return buyXPayYsavings;
+                }).toList();
+
+                totalBuyXPayYSavings = savings.stream().mapToDouble(e-> e.getTotalSavings()).sum();
 
             
             }
+
+            System.out.println("Savings");
+            System.out.println(totalProductSavings);
+            System.out.println(totalBuyXPayYSavings);
+            System.out.println(totalOrderSavings);
         }
-        
-        
-        return true;
-        OOrder order = new OOrder();
+            
+        return response;
 //        order.set
     }
 

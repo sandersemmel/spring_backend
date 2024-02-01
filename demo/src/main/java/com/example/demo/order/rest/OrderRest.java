@@ -63,7 +63,10 @@ public class OrderRest {
             return "no customer exists..";
         }
 
+        System.out.println("Starting to create order");
         orderService.createOrder(order);
+
+        System.out.println("Discount agreements");
         System.out.println(customer.getDiscountAgreement());
 
         return "Order created";
