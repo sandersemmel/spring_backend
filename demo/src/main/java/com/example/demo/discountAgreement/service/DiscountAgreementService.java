@@ -64,6 +64,9 @@ public class DiscountAgreementService {
 		discount.setCustomerID(customer.getId());
 		var oldDiscountAgreements = customer.getDiscountAgreement();
 		oldDiscountAgreements.add(discount);
+
+		//customer.setDiscountAgreement(oldDiscountAgreements);
+		customerRepository.flush();
 		return true;
     }
 }

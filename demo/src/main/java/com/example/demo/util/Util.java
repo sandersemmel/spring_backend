@@ -2,6 +2,7 @@ package com.example.demo.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -10,10 +11,13 @@ import org.springframework.stereotype.Service;
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.discountAgreement.entity.AgreementType;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
+import com.example.demo.dto.incoming.DTO_CartProduct;
+import com.example.demo.interfaces.Discount.BuyXPayYsavings;
 import com.example.demo.interfaces.Discount.OrderSavings;
 import com.example.demo.interfaces.Discount.ProductSavings;
 import com.example.demo.interfaces.Order.OrderProduct;
 import com.example.demo.order.entity.OOrder;
+import com.example.demo.order.types.OrderProducts;
 import com.example.demo.product.entity.Product;
 import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 
@@ -93,7 +97,6 @@ public class Util {
 
     public static ProductSavings calculateProductDiscount(DiscountAgreement discountAgreement){
             // calculate a discount off of single product and return the value
-
             var price = discountAgreement.getProduct().getPrice();
             var discountPerc = discountAgreement.getPercentageOff();
 
@@ -115,10 +118,10 @@ public class Util {
         return originalPrice * (1 - (discountPercentage / 100.0));
     }
 
-    public static OrderSavings calculateOrderSavings(List<OrderProduct> orderProducts, int percentageOff){
+    public static OrderSavings calculateOrderSavings(List<OrderProducts> orderProducts, int percentageOff){
                 
         double orderTotal = orderProducts.stream()
-                                .mapToDouble(e -> e.getPrice() * e.getQuantity())
+                                .mapToDouble(e -> e.getProduct().getPrice() * e.getQuantity())
                                 .sum();
 
         OrderSavings orderSavings = new OrderSavings();
@@ -132,8 +135,72 @@ public class Util {
         return orderSavings;
     }
 
-    
+    public static List<ProductSavings> calculateProductSavings(List<DiscountAgreement> customerDiscountAgreements, List<OrderProducts> orderProducts){
+        // get order productsids to list
+        List<Long> productsIds = orderProducts.stream().map(e->{
+            return e.getProduct().getId();
+        }).toList();
+     
+        List<ProductSavings> productSavingsList = new ArrayList();
 
-   
+        for (DiscountAgreement discountAgreement : customerDiscountAgreements) {
+            if(AgreementType.PERCENTAGE_OFF_PRODUCT.equals(discountAgreement.getAgreementType())){
+                if(productsIds.contains(discountAgreement.getProduct().getId())){
+                    productSavingsList.add(Util.calculateProductDiscount(discountAgreement));
+                    //totalProductSavings = productSavingsList.stream().mapToDouble(e-> e.getTotalSavings()).sum();
+                }
+            }
+        }
+        return productSavingsList;
 
+    }
+
+    public static List<OrderSavings> calculateOrderSavings(List<DiscountAgreement> customerDiscountAgreements, List<OrderProducts> orderProducts){
+        List<OrderSavings> orderSavings = new ArrayList<OrderSavings>();
+        for(DiscountAgreement discountAgreement : customerDiscountAgreements){
+            if(AgreementType.PERCENTAGE_OFF_WHOLE_ORDER.equals(discountAgreement.getAgreementType())){
+                orderSavings.add(Util.calculateOrderSavings(orderProducts,discountAgreement.getPercentageOff()));
+            }
+        }
+        return orderSavings;
+    }
+
+
+   public static List<BuyXPayYsavings> calculateBuyXPayYSavings(List<DiscountAgreement> customerDiscountAgreements, List<OrderProducts> orderProducts){
+                    // Calculate the savings for this specific case
+                    List<BuyXPayYsavings> savings = new ArrayList();
+
+                    // calculate order total before any discounts
+                    var originalOrderTotal = orderProducts.stream().mapToDouble((product)-> {
+                        return (product.getProduct().getPrice() * product.getQuantity());
+                    }).sum();
+
+                    for (DiscountAgreement discountAgreement : customerDiscountAgreements) {
+                        
+                        if(AgreementType.BUY_X_ONLY_PAY_Y.equals(discountAgreement.getAgreementType())){
+
+                            var productsThatAreEligible = orderProducts.stream().filter(orderProduct-> {
+                                if(orderProduct.getProduct().getId() == discountAgreement.getProduct().getId() && orderProduct.getQuantity() >= discountAgreement.getMustBuyAmount()){
+                                    return true;
+                                }
+                                return false;
+                            }).toList();
+                
+
+                            savings = productsThatAreEligible.stream().map(orderProduct->{
+                            
+                                BuyXPayYsavings buyXPayYsavings = new BuyXPayYsavings();
+                                var howManyDiscounted = discountAgreement.getMustBuyAmount() - discountAgreement.getOnlyPayForAmount();
+                                var totalSavings = orderProduct.getProduct().getPrice() * howManyDiscounted;
+                                buyXPayYsavings.setTotalSavings(totalSavings);
+                                buyXPayYsavings.setTotalAfterSavings(originalOrderTotal-totalSavings);
+                                return buyXPayYsavings;
+                            }).toList();
+                }
+            }
+            savings.forEach(e-> e.setOriginalOrderTotal(originalOrderTotal));
+
+            return savings;
+
+} 
 }
