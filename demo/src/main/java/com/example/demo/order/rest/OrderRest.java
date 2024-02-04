@@ -1,6 +1,7 @@
 package com.example.demo.order.rest;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,9 @@ public class OrderRest {
     }
     
     @PostMapping("/createorder")
-    public BaseDTO<String> createOrder(@RequestBody DTO_CreateOrder dto) {
+    public BaseDTO<OOrder> createOrder(@RequestBody DTO_CreateOrder dto) {
+        
+        BaseDTO<OOrder> orderResponse = new BaseDTO<>();
         
         try {
             var safe = Util.isSafeFromSqlInject(dto);
@@ -71,32 +74,16 @@ public class OrderRest {
             dto.setCustomer(customerService.fillCustomer(dto.getCustomerID()));
             var preparedOrder = orderPrepareService.getBestDiscount(dto);
             preparedOrder.setOrderSKUs(skUservice.createSkus(preparedOrder.getOrderProducts()));
-            orderService.createOrder(preparedOrder);
+            var createdOrder = orderService.createOrder(preparedOrder);
+            orderResponse.setData(Arrays.asList(createdOrder));
 
         } catch (Exception e) {
-            // TODO: handle exception
-        }
-        
-
-        try {
-            if(!Util.isSafeFromSqlInject(dto)){
-                return "Unable to create order";
-            }
-        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            orderResponse.setExplanation(e.getMessage());
             e.printStackTrace();
-            return "Something went wrong, unable to create order";
         }
-
-
-
-
-        System.out.println("Starting to create order");
-        orderService.createOrder(dto);
-
-        System.out.println("Discount agreements");
-        System.out.println(customer.getDiscountAgreement());
-
-        return "Order created";
+        return orderResponse;
+        
     }
     
 }

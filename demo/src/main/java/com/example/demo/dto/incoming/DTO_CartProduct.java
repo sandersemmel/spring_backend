@@ -1,8 +1,10 @@
 package com.example.demo.dto.incoming;
 
+import com.example.demo.product.entity.Product;
+
 public class DTO_CartProduct {
    private int quantity;
-   private long productID;
+   private Product product;
    
 public int getQuantity() {
     return quantity;
@@ -10,10 +12,10 @@ public int getQuantity() {
 public void setQuantity(int quantity) {
     this.quantity = quantity;
 }
-public long getProductID() {
-    return productID;
+public Product getProduct() {
+    return product;
 }
-public void setProductID(long productID) {
-    this.productID = productID;
+public void setProductID(Product product) {
+    this.product = product;
 } 
 }

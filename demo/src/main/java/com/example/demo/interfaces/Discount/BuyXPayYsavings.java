@@ -46,14 +46,17 @@ public class BuyXPayYsavings implements IPreparedOrder {
         }
         return orderProducts;
     }
+    public void setOrderProducts(List<OrderProducts> orderProducts) {
+        this.orderProducts = orderProducts;
+    }
     public List<SKU> getOrderSKUs() {
         return orderSKUs;
     }
     public void setOrderSKUs(List<SKU> orderSKUs) {
         this.orderSKUs = orderSKUs;
     }
-    @Override
     public Customer getCustomer() {
         return customer;
     }
+
 }

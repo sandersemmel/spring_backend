@@ -27,9 +27,9 @@ public class OrderPrepareService {
         List<OrderProducts> ret = new ArrayList();
         try {
             ret = dto_createOrder.getProductQuantity().stream().map((cartProduct)-> {
-                var product = productService.getProduct(cartProduct.getProductID());
+                var product = productService.getProduct(cartProduct.getProduct().getId());
                 if(product == null){
-                    throw new ProductNotFoundException("Product that was in cart " + cartProduct.getProductID() + " was not found from DB");
+                    throw new ProductNotFoundException("Product that was in cart " + cartProduct.getProduct().getId() + " was not found from DB");
                 }
                 return new OrderProducts(product,cartProduct.getQuantity());
             }).toList();
@@ -58,7 +58,9 @@ public class OrderPrepareService {
         orderSavings.forEach(e-> allSavings.add(e));
         buyXPayYsavings.forEach(e-> allSavings.add(e));
 
-        return Util.getTheBestDiscount(allSavings);
+        var preparedOrder = Util.getTheBestDiscount(allSavings);
+        preparedOrder.setOrderProducts(orderProducts);
+        return preparedOrder;
     }
 
 
