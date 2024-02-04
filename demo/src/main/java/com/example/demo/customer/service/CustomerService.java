@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.customer.repository.CustomerRepository;
 import com.example.demo.dto.incoming.DTO_CreateCustomer;
+import com.example.demo.dto.incoming.DTO_CreateOrder;
+import com.example.demo.order.errors.CustomerNotFoundException;
 import com.example.demo.util.Util;
 
 @Service()
@@ -40,6 +42,18 @@ public class CustomerService {
         } catch (Exception e) {
             return null;
         }
-        
     }
+    public Customer fillCustomer(long customerID) throws CustomerNotFoundException {
+
+        if(customerID == 0){
+            throw new CustomerNotFoundException("No customer ID given." + customerID);
+        }
+        
+        Customer customer = findCustomer(customerID);
+        if(customer == null){
+            throw new CustomerNotFoundException("No such customer exists" + customerID);   
+        }
+        return customer;
+    }
+
 }

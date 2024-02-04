@@ -13,6 +13,7 @@ import com.example.demo.discountAgreement.entity.AgreementType;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
 import com.example.demo.dto.incoming.DTO_CartProduct;
 import com.example.demo.interfaces.Discount.BuyXPayYsavings;
+import com.example.demo.interfaces.Discount.IPreparedOrder;
 import com.example.demo.interfaces.Discount.OrderSavings;
 import com.example.demo.interfaces.Discount.ProductSavings;
 import com.example.demo.interfaces.Order.OrderProduct;
@@ -85,17 +86,21 @@ public class Util {
                 SqlSafeUtil.isSqlInjectionSafe(stringvalue);
             }
         }
-        
-        
         return true;
-
     }
+
+
+
+
+
     private static boolean isGetter(Method method) {
         return method.getName().startsWith("get") && method.getParameterCount() == 0
                 && !method.getReturnType().equals(void.class);
     }
 
-    public static ProductSavings calculateProductDiscount(DiscountAgreement discountAgreement){
+    public static ProductSavings calculateProductDiscount(DiscountAgreement discountAgreement, List<OrderProducts> orderProducts){
+            var originalTotal = calculateOriginalOrderTotal(orderProducts);
+        
             // calculate a discount off of single product and return the value
             var price = discountAgreement.getProduct().getPrice();
             var discountPerc = discountAgreement.getPercentageOff();
@@ -108,9 +113,9 @@ public class Util {
             var totalSavings = price - discountedPrice;
 
             ProductSavings productSavings = new ProductSavings();
-            productSavings.setDiscountedPrice(discountedPrice);
+            productSavings.setTotalAfterSavings(originalTotal - totalSavings);
             productSavings.setTotalSavings(totalSavings);
-            productSavings.setOriginalPrice(price);
+            productSavings.setOriginalOrderTotal(calculateOriginalOrderTotal(orderProducts));
             return productSavings;
     }
 
@@ -118,11 +123,16 @@ public class Util {
         return originalPrice * (1 - (discountPercentage / 100.0));
     }
 
+    private static double calculateOriginalOrderTotal(List<OrderProducts> orderProducts){
+        return orderProducts.stream().mapToDouble((product)-> {
+            return (product.getProduct().getPrice() * product.getQuantity());
+        }).sum();
+
+    }
+
     public static OrderSavings calculateOrderSavings(List<OrderProducts> orderProducts, int percentageOff){
                 
-        double orderTotal = orderProducts.stream()
-                                .mapToDouble(e -> e.getProduct().getPrice() * e.getQuantity())
-                                .sum();
+        double orderTotal = calculateOriginalOrderTotal(orderProducts);
 
         OrderSavings orderSavings = new OrderSavings();
 
@@ -146,8 +156,7 @@ public class Util {
         for (DiscountAgreement discountAgreement : customerDiscountAgreements) {
             if(AgreementType.PERCENTAGE_OFF_PRODUCT.equals(discountAgreement.getAgreementType())){
                 if(productsIds.contains(discountAgreement.getProduct().getId())){
-                    productSavingsList.add(Util.calculateProductDiscount(discountAgreement));
-                    //totalProductSavings = productSavingsList.stream().mapToDouble(e-> e.getTotalSavings()).sum();
+                    productSavingsList.add(Util.calculateProductDiscount(discountAgreement, orderProducts));
                 }
             }
         }
@@ -171,9 +180,8 @@ public class Util {
                     List<BuyXPayYsavings> savings = new ArrayList();
 
                     // calculate order total before any discounts
-                    var originalOrderTotal = orderProducts.stream().mapToDouble((product)-> {
-                        return (product.getProduct().getPrice() * product.getQuantity());
-                    }).sum();
+                    var originalOrderTotal = calculateOriginalOrderTotal(orderProducts);
+
 
                     for (DiscountAgreement discountAgreement : customerDiscountAgreements) {
                         
@@ -202,5 +210,20 @@ public class Util {
 
             return savings;
 
+}
+public static IPreparedOrder getTheBestDiscount(List<IPreparedOrder> allSavings) {
+    if (allSavings == null || allSavings.isEmpty()) {
+        return null;
+    }
+
+    IPreparedOrder currentBestDiscount = allSavings.get(0);
+
+    for (IPreparedOrder discount : allSavings) {
+        if (discount.getTotalSavings() > currentBestDiscount.getTotalSavings()) {
+            currentBestDiscount = discount;
+        }
+    }
+
+    return currentBestDiscount;
 } 
 }

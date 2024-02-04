@@ -14,8 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.customer.service.CustomerService;
 import com.example.demo.dto.incoming.DTO_CreateOrder;
+import com.example.demo.dto.outgoing.BaseDTO;
 import com.example.demo.order.entity.OOrder;
+import com.example.demo.order.service.OrderDiscountService;
+import com.example.demo.order.service.OrderPrepareService;
 import com.example.demo.order.service.OrderService;
+import com.example.demo.product.service.ProductService;
+import com.example.demo.sku.service.SKUservice;
 import com.example.demo.util.Util;
 
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +37,18 @@ public class OrderRest {
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private OrderPrepareService orderPrepareService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private OrderDiscountService orderDiscountService;
+
+    @Autowired
+    private SKUservice skUservice;
+
     @GetMapping("/createtestorder")
     public String createTestOrder(){
         orderService.createTestOrder();
@@ -44,9 +61,25 @@ public class OrderRest {
     }
     
     @PostMapping("/createorder")
-    public String createOrder(@RequestBody DTO_CreateOrder order) {
+    public BaseDTO<String> createOrder(@RequestBody DTO_CreateOrder dto) {
+        
         try {
-            if(!Util.isSafeFromSqlInject(order)){
+            var safe = Util.isSafeFromSqlInject(dto);
+            if(!safe){
+                throw new Exception("Not safe data");
+            }
+            dto.setCustomer(customerService.fillCustomer(dto.getCustomerID()));
+            var preparedOrder = orderPrepareService.getBestDiscount(dto);
+            preparedOrder.setOrderSKUs(skUservice.createSkus(preparedOrder.getOrderProducts()));
+            orderService.createOrder(preparedOrder);
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+
+        try {
+            if(!Util.isSafeFromSqlInject(dto)){
                 return "Unable to create order";
             }
         } catch (Exception e) {
@@ -54,17 +87,11 @@ public class OrderRest {
             return "Something went wrong, unable to create order";
         }
 
-        if(order.getCustomerID() == 0){
-            return "Unable to create Order, no customer given.";
-        }
-        
-        Customer customer = customerService.findCustomer(order.getCustomerID());
-        if(customer == null){
-            return "no customer exists..";
-        }
+
+
 
         System.out.println("Starting to create order");
-        orderService.createOrder(order);
+        orderService.createOrder(dto);
 
         System.out.println("Discount agreements");
         System.out.println(customer.getDiscountAgreement());

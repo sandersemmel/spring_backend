@@ -17,12 +17,12 @@ import com.example.demo.product.entity.Product;
 public class UtilTest {
     @Test
     void testCalculateProductSavings() {
-        // Given product of price 100
-        // Discount agreement of 5 %
+        // Given order which total is 400
+        // Discount agreement of 5 % off a single product
         // The result should be ProductSavings where
             // discountedprice == 95
             // totalsavings == 5
-            // originalprice 100
+            // originaltotal 400
 
         List<DiscountAgreement> customerDiscountAgreements = new ArrayList<>();
         // discount agreement
@@ -45,11 +45,12 @@ public class UtilTest {
 
         List<OrderProducts> orderProducts = new ArrayList<>();
         orderProducts.add(new OrderProducts(product, 1));
+        orderProducts.add(new OrderProducts(product2, 3));
         
         ProductSavings productSavings = Util.calculateProductSavings(customerDiscountAgreements, orderProducts).get(0);
 
-        assertEquals(product.getPrice(), productSavings.getOriginalPrice());
-        assertEquals(95, productSavings.getDiscountedPrice());
+        assertEquals(400, productSavings.getOriginalOrderTotal());
+        assertEquals(395, productSavings.getTotalAfterSavings());
         assertEquals(5, productSavings.getTotalSavings());
     }
 
