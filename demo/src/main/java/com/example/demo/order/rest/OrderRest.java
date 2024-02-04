@@ -71,10 +71,13 @@ public class OrderRest {
             if(!safe){
                 throw new Exception("Not safe data");
             }
-            dto.setCustomer(customerService.fillCustomer(dto.getCustomerID()));
+            var customer = customerService.fillCustomer(dto.getCustomerID());
+            dto.setCustomer(customer);
             var preparedOrder = orderPrepareService.getBestDiscount(dto);
             preparedOrder.setOrderSKUs(skUservice.createSkus(preparedOrder.getOrderProducts()));
+            preparedOrder.setCustomer(customer);
             var createdOrder = orderService.createOrder(preparedOrder);
+            
             orderResponse.setData(Arrays.asList(createdOrder));
 
         } catch (Exception e) {

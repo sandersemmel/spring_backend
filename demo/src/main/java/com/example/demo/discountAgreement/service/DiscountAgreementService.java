@@ -56,12 +56,12 @@ public class DiscountAgreementService {
     }
 
     public boolean attachDiscountToCustomer(DTO_AttachCustomerToDiscount entity) {
-		var discount = discountRepository.findById(entity.getDiscountID()).get();
-		var customer = customerRepository.findById(entity.getCustomerID()).get();
+		var discount = discountRepository.findById(entity.getDiscountID()).orElse(null);
+		var customer = customerRepository.findById(entity.getCustomerID()).orElse(null);
 		if(discount == null || customer == null){
 			return false;
 		}	
-		discount.setCustomerID(customer.getId());
+		//discount.getCustomer().add(customer);
 		var oldDiscountAgreements = customer.getDiscountAgreement();
 		oldDiscountAgreements.add(discount);
 

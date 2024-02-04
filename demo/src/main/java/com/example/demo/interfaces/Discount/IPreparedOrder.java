@@ -23,6 +23,8 @@ public interface IPreparedOrder {
 
      Customer getCustomer();
 
+     void setCustomer(Customer customer);
+
      List<SKU> getOrderSKUs();
 
      void setOrderSKUs(List<SKU> skus);

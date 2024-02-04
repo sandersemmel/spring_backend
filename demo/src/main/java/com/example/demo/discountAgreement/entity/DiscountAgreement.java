@@ -1,12 +1,13 @@
 package com.example.demo.discountAgreement.entity;
 
+import java.util.List;
+
 import com.example.demo.common.BaseEntity;
 import com.example.demo.customer.entity.Customer;
 import com.example.demo.product.entity.Product;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -17,7 +18,6 @@ public class DiscountAgreement extends BaseEntity {
     public DiscountAgreement(){
         
     }
-
     @OneToOne()
     private Product product;
     private AgreementType agreementType;
@@ -26,10 +26,18 @@ public class DiscountAgreement extends BaseEntity {
     private int onlyPayForAmount;
     private long customerID;
     
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Customer customer;
+    @ManyToMany
+    //@JoinColumn(name = "parent_id")
+    private List<Customer> customer;
 
+
+    public List<Customer> getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(List<Customer> customer) {
+        this.customer = customer;
+    }
 
     public Product getProduct() {
         return product;
@@ -71,13 +79,6 @@ public class DiscountAgreement extends BaseEntity {
 
     public void setOnlyPayForAmount(int onlyPayForAmount) {
         this.onlyPayForAmount = onlyPayForAmount;
-    }
-    public long getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(long customerID) {
-        this.customerID = customerID;
     }
 
 }

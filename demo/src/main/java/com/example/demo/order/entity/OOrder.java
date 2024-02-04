@@ -13,6 +13,7 @@ import com.example.demo.sku.entity.SKU;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -28,10 +29,10 @@ public class OOrder extends BaseEntity{
     @OneToMany
     private List<SKU> SKU;
 
-    @OneToOne
+    @ManyToOne
     private DiscountAgreement discountAgreement;
 
-    @OneToOne
+    @ManyToOne
     private Customer customer;
 
     private double totalAfterDiscount;

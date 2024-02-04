@@ -13,11 +13,13 @@ public class BuyXPayYsavings implements IPreparedOrder {
     private double totalAfterSavings;
     private double totalSavings;
     private DiscountAgreement discountAgreement;
+
     private List<OrderProducts> orderProducts;
     private List<SKU> orderSKUs;
     private Customer customer;
 
  
+
     public double getOriginalOrderTotal() {
         return originalOrderTotal;
     }
@@ -40,6 +42,9 @@ public class BuyXPayYsavings implements IPreparedOrder {
     public DiscountAgreement getDiscountAgreement() {
         return discountAgreement;
     }
+    public void setDiscountAgreement(DiscountAgreement discountAgreement) {
+        this.discountAgreement = discountAgreement;
+    }
     public List<OrderProducts> getOrderProducts() {
         if(orderProducts == null){
             orderProducts = new ArrayList<>();
@@ -57,6 +62,9 @@ public class BuyXPayYsavings implements IPreparedOrder {
     }
     public Customer getCustomer() {
         return customer;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
 }

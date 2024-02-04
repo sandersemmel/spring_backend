@@ -3,6 +3,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.customer.repository.CustomerRepository;
+import com.example.demo.customer.service.CustomerService;
+import com.example.demo.discountAgreement.entity.DiscountAgreement;
+import com.example.demo.discountAgreement.repository.DiscountAgreementRepository;
 import com.example.demo.interfaces.Discount.IPreparedOrder;
 import com.example.demo.order.entity.OOrder;
 import com.example.demo.order.repository.OrderRepository;
@@ -12,7 +17,7 @@ import com.example.demo.order.repository.OrderRepository;
 public class OrderService {
 
     @Autowired()
-    private OrderRepository orderRepository;
+    private OrderRepository orderRepository;  
 
     public void createTestOrder(){
         //orderRepository.save(util.getTestOrder());
@@ -29,8 +34,12 @@ public class OrderService {
         order.setTotalAfterDiscount(preparedOrder.getTotalAfterSavings());
         order.setTotalBeforeDiscount(preparedOrder.getOriginalOrderTotal());
         order.setCustomer(preparedOrder.getCustomer());
-        
-        return orderRepository.save(order);
+
+
+        var savedOrder = orderRepository.save(order);
+        orderRepository.flush();
+
+        return savedOrder;
 
     }
 

@@ -26,8 +26,8 @@ import com.github.rkpunjal.sqlsafe.SqlSafeUtil;
 public class Util {
  
     public void getTestOrder(){
-        Product hammasHarja = new Product("HammasHarja",5, "150");
-        Product koiranRuoka = new Product("KoiranRuoka",10, "150");
+        //Product hammasHarja = new Product("HammasHarja",5, "150");
+        //Product koiranRuoka = new Product("KoiranRuoka",10, "150");
 
         //var orderProducts = new ArrayList<Product>();
         //orderProducts.add(hammasHarja);
@@ -44,7 +44,7 @@ public class Util {
     public Customer createTestCustomer_withDiscountAgreement(){
         Customer customer = new Customer();
 
-        Product product = new Product("Testituote", 5,"150");
+        Product product = new Product("Testituote", 5);
 
         DiscountAgreement discountAgreement = new DiscountAgreement();
         discountAgreement.setAgreementType(AgreementType.PERCENTAGE_OFF_PRODUCT);
@@ -116,6 +116,7 @@ public class Util {
             productSavings.setTotalAfterSavings(originalTotal - totalSavings);
             productSavings.setTotalSavings(totalSavings);
             productSavings.setOriginalOrderTotal(calculateOriginalOrderTotal(orderProducts));
+            productSavings.setDiscountAgreement(discountAgreement);
             return productSavings;
     }
 
@@ -130,17 +131,18 @@ public class Util {
 
     }
 
-    public static OrderSavings calculateOrderSavings(List<OrderProducts> orderProducts, int percentageOff){
+    public static OrderSavings calculateOrderSavings(List<OrderProducts> orderProducts, DiscountAgreement discountAgreement){
                 
         double orderTotal = calculateOriginalOrderTotal(orderProducts);
 
         OrderSavings orderSavings = new OrderSavings();
 
-        var totalAfterDiscount = calculateDiscountForAmount(orderTotal, percentageOff);
+        var totalAfterDiscount = calculateDiscountForAmount(orderTotal, discountAgreement.getPercentageOff());
 
         orderSavings.setOriginalOrderTotal(orderTotal);
         orderSavings.setTotalAfterSavings(totalAfterDiscount);
         orderSavings.setTotalSavings((orderTotal-totalAfterDiscount));
+        orderSavings.setDiscountAgreement(discountAgreement);
                             
         return orderSavings;
     }
@@ -168,7 +170,7 @@ public class Util {
         List<OrderSavings> orderSavings = new ArrayList<OrderSavings>();
         for(DiscountAgreement discountAgreement : customerDiscountAgreements){
             if(AgreementType.PERCENTAGE_OFF_WHOLE_ORDER.equals(discountAgreement.getAgreementType())){
-                orderSavings.add(Util.calculateOrderSavings(orderProducts,discountAgreement.getPercentageOff()));
+                orderSavings.add(Util.calculateOrderSavings(orderProducts,discountAgreement));
             }
         }
         return orderSavings;
@@ -202,6 +204,8 @@ public class Util {
                                 var totalSavings = orderProduct.getProduct().getPrice() * howManyDiscounted;
                                 buyXPayYsavings.setTotalSavings(totalSavings);
                                 buyXPayYsavings.setTotalAfterSavings(originalOrderTotal-totalSavings);
+                                buyXPayYsavings.setDiscountAgreement(discountAgreement);
+                                
                                 return buyXPayYsavings;
                             }).toList();
                 }

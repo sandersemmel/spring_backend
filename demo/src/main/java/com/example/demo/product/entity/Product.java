@@ -1,9 +1,14 @@
 package com.example.demo.product.entity;
 
+import java.util.List;
+
+import com.example.demo.sku.entity.SKU;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity()
@@ -18,24 +23,22 @@ public class Product {
 
     private double price;
 
-    private String SKU;
+    @OneToMany
+    private List<SKU> skus;
 
-    public String getSKU() {
-        return SKU;
-    }
-
-    public void setSKU(String SKU) {
-        this.SKU = SKU;
+    public Product(String name, double price, List<SKU> skus) {
+        this.name = name;
+        this.price = price;
+        this.skus = skus;
     }
 
     public Product() {
         // Default constructor required by JPA
     }
 
-    public Product(String name, double price, String SKU) {
+    public Product(String name, double price) {
         this.name = name;
         this.price = price;
-        this.SKU = SKU;
     }
 
     // Getters and setters
@@ -62,5 +65,13 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public List<SKU> getSkus() {
+        return skus;
+    }
+
+    public void setSkus(List<SKU> skus) {
+        this.skus = skus;
     }
 }

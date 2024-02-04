@@ -54,9 +54,12 @@ public class OrderSavings implements IPreparedOrder {
     public void setOrderProducts(List<OrderProducts> orderProducts) {
         this.orderProducts = orderProducts;
     }
-    @Override
+    
     public Customer getCustomer() {
         return customer;
+    }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
 }

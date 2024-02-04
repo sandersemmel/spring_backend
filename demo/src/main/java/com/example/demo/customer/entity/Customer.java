@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.example.demo.common.BaseEntity;
 import com.example.demo.discountAgreement.entity.DiscountAgreement;
+import com.example.demo.order.entity.OOrder;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -14,8 +16,11 @@ import jakarta.persistence.Table;
 @Table(name = "CUSTOMER")
 public class Customer extends BaseEntity{
     
-    @OneToMany(fetch = FetchType.EAGER)
-    List<DiscountAgreement> discountAgreement;
+    @ManyToMany()
+    private List<DiscountAgreement> discountAgreement;
+
+    @OneToMany
+    private List<OOrder> orders;
 
     String name;
 
@@ -32,5 +37,13 @@ public class Customer extends BaseEntity{
     }
     public void setName(String _name){
         this.name = _name;
+    }
+
+    public List<OOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OOrder> orders) {
+        this.orders = orders;
     }
 }

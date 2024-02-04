@@ -7,11 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.customer.entity.Customer;
-import com.example.demo.customer.service.CustomerService;
+
+
 import com.example.demo.dto.incoming.DTO_CreateOrder;
 import com.example.demo.interfaces.Discount.IPreparedOrder;
-import com.example.demo.order.errors.CustomerNotFoundException;
+
 import com.example.demo.order.errors.ProductNotFoundException;
 import com.example.demo.order.types.OrderProducts;
 import com.example.demo.product.service.ProductService;
