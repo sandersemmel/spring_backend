@@ -215,7 +215,7 @@ public class Util {
             return savings;
 
 }
-public static IPreparedOrder getTheBestDiscount(List<IPreparedOrder> allSavings) {
+public static IPreparedOrder getTheBestDiscount(List<? extends IPreparedOrder> allSavings) {
     if (allSavings == null || allSavings.isEmpty()) {
         return null;
     }

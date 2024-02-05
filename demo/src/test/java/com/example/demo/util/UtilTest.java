@@ -133,5 +133,51 @@ public class UtilTest {
             assertEquals(xsavings.getTotalSavings(), 100);
 	}
 
+
+    @Test
+    void testCalculateOrderSavings_multiple_discount_for_customer() {
+       // Given order which total is 1000
+        // Discount agreement of 10 % off whole order
+        // Discount agreement of 20 % off whole order
+        // The result be the best discount
+
+
+            List<DiscountAgreement> customerDiscountAgreements = new ArrayList<>();
+            // discount agreement
+            DiscountAgreement discountAgreement = new DiscountAgreement();
+            discountAgreement.setAgreementType(AgreementType.PERCENTAGE_OFF_WHOLE_ORDER);
+            discountAgreement.setPercentageOff(10);
+
+            DiscountAgreement discountAgreement2 = new DiscountAgreement();
+            discountAgreement2.setAgreementType(AgreementType.PERCENTAGE_OFF_WHOLE_ORDER);
+            discountAgreement2.setPercentageOff(20);
+        
+        
+            Product product = new Product();
+            product.setId(1L);
+            product.setPrice(100);
+        
+            Product product2 = new Product();
+            product2.setId(2L);
+            product2.setPrice(900);
+            
+            customerDiscountAgreements.add(discountAgreement);
+            customerDiscountAgreements.add(discountAgreement2);
+    
+            List<OrderProducts> orderProducts = new ArrayList<>();
+            orderProducts.add(new OrderProducts(product, 1));
+            orderProducts.add(new OrderProducts(product2, 1));
+            
+            List<OrderSavings> orderSavingsList = Util.calculateOrderSavings(customerDiscountAgreements, orderProducts);
+            
+            assertEquals(orderSavingsList.size(),2);
+            OrderSavings orderSavings = orderSavingsList.get(0);
+
+            
+            var bestDiscount = Util.getTheBestDiscount(orderSavingsList);
+            assertEquals(bestDiscount.getTotalSavings(), 200);
+
+    }
+
    
 }
