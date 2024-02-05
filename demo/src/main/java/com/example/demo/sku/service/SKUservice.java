@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.interfaces.Order.OrderProduct;
-import com.example.demo.order.errors.ProductNotFoundException;
 import com.example.demo.order.types.OrderProducts;
 import com.example.demo.product.entity.Product;
 import com.example.demo.sku.entity.SKU;
